@@ -16,20 +16,20 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/nick"
+            android:id="@+id/name"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:hint="nick..." />
+            android:hint="name..." />
 
         <EditText
-            android:id="@+id/mail"
+            android:id="@+id/desc"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:hint="mail..."
+            android:hint="desc..."
             android:inputType="textEmailAddress" />
 
         <EditText
-            android:id="@+id/pwd"
+            android:id="@+id/price"
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:hint="password..."

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!--List_item dimens-->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="nameSize">18sp</dimen>
+    <dimen name="titleSize">16sp</dimen>
+    <dimen name="textSize">15sp</dimen>
+    <dimen name="ava_size">60sp</dimen>
+    <dimen name="line_margtop">10dp</dimen>
+    <dimen name="img_margtop">3dp</dimen>
+    <dimen name="time_margright">8dp</dimen>
+<!--activity_detalized dimens-->
+    <dimen name="paddingName">15dp</dimen>
+    <dimen name="paddingLeftName">8dp</dimen>
+    <dimen name="txtSizeName_Title">20sp</dimen>
+    <dimen name="paddingTitle_Text">8sp</dimen>
+    <dimen name="paddingTopTitle">16sp</dimen>
+    <dimen name="layour_marg">10dp</dimen>
+    <!--activity_write dimens-->
+    <dimen name="layout_padd">6dp</dimen>
+    <dimen name="textViewPadd">8dp</dimen>
+    <dimen name="checkboxingMargBot">25dp</dimen>
+</resources>
