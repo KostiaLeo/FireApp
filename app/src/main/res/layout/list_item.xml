@@ -62,6 +62,13 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/time_margright"
             android:text="Time"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+add"
+        android:layout_below="@id/time"
+        android:layout_alignParentRight="true"
+        android:id="@+id/add"/>
         <View
             android:id="@+id/line"
             android:layout_width="match_parent"

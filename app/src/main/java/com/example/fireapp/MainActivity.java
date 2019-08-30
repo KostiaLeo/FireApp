@@ -22,23 +22,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements RecyclerProductAdapter.EmailItemClicked {
+public class MainActivity extends AppCompatActivity implements RecyclerProductAdapter.EmailItemClicked{
     private DatabaseReference reff;
+    private Button addToBucket, toConsole;
+    private ArrayList<Product> myProducts = new ArrayList<>();
+    private ArrayList<Product> bucket = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler);
-
+        //Intent intent = new Intent(MainActivity.this, AddActivity.class);
+        //startActivity(intent);
         FirebaseApp.initializeApp(this);
+        addToBucket = findViewById(R.id.add);
+
         reff = FirebaseDatabase.getInstance().getReference().child("Product");
         reff.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Product> myProducts = new ArrayList<>();
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Product Product = ds.getValue(Product.class);
-                    myProducts.add(Product);
+                    Product product = ds.getValue(Product.class);
+                    myProducts.add(product);
                 }
                 give(myProducts);
             }
@@ -47,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        //System.out.println("THIS IS BUCKETSSSSSSSSSSSSSSSSSSSS" + addToBucket);
+    }
+
+    private void addProductToBucket() {
+
     }
 
     public void itemClickedCallback(int itemPosition) {

@@ -21,7 +21,7 @@ public class AddActivity extends AppCompatActivity {
     private EditText nick_inp, mail_inp, pwd_inp;
     private Button ins_btn, goToShow;
     private DatabaseReference reff;
-    private User user;
+    private Product product;
     private int maxId;
 
     @Override
@@ -29,7 +29,7 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
-        reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("User");
+        reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("Product");
         reff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -46,19 +46,19 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-        nick_inp = findViewById(R.id.nick);
-        mail_inp = findViewById(R.id.mail);
-        pwd_inp = findViewById(R.id.pwd);
+        nick_inp = findViewById(R.id.name);
+        mail_inp = findViewById(R.id.desc);
+        pwd_inp = findViewById(R.id.price);
         ins_btn = findViewById(R.id.btn_ins);
 
         ins_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                user = new User();
-                user.setNick(nick_inp.getText().toString());
-                user.setMail(mail_inp.getText().toString());
-                user.setPwd(pwd_inp.getText().toString());
-                reff.child(String.valueOf(maxId++)).setValue(user);
+                product = new Product();
+                product.setName(nick_inp.getText().toString());
+                product.setDesc(mail_inp.getText().toString());
+                product.setPrice(pwd_inp.getText().toString());
+                reff.child(String.valueOf(maxId++)).setValue(product);
             }
         });
         goToShow = findViewById(R.id.goToShow);

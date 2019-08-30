@@ -6,12 +6,19 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/products"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="500dp"
             tools:listitem="@layout/list_item"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="toConsole"
+            android:id="@+id/toBasket"
+            android:layout_marginTop="30dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

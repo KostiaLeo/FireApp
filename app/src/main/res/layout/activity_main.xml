@@ -32,8 +32,8 @@
             android:id="@+id/price"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:hint="password..."
-            android:inputType="textPassword" />
+            android:hint="price..."
+            android:inputType="number" />
     </LinearLayout>
 
     <Button
@@ -44,7 +44,7 @@
         android:layout_marginLeft="50dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:text="Insert user" />
+        android:text="Insert product" />
 
     <Button
         android:id="@+id/goToShow"
