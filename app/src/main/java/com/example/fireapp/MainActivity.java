@@ -24,10 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     private DatabaseReference reff;
     private Button toBasket;
-    RecyclerProductAdapter recyclerProductAdapter;
 
     private DownloadingFBData downloadingFBData;
 
@@ -38,8 +37,6 @@ public class MainActivity extends AppCompatActivity{
 
         FirebaseApp.initializeApp(this);
 
-        Random r = new Random();
-
         final String nameOfBasket = "BasketProd";
 
         toBasket = findViewById(R.id.toBasket);
@@ -47,7 +44,6 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, BasketActivity.class);
-                //intent.putExtra("nameOfB", nameOfBasket);
                 startActivity(intent);
             }
         });
@@ -55,7 +51,7 @@ public class MainActivity extends AppCompatActivity{
 
         ProductsRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         downloadingFBData = new DownloadingFBData(reff, ProductsRecycler, nameOfBasket, "Product", 1);
-
         downloadingFBData.setRecyclerView();
+        //инициализируем объект, работающий с загрузкой данных из бд, и вызываем генерацию рес.вью + лайаут менеджер для ресайклера
     }
 }

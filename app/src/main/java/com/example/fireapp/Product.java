@@ -1,10 +1,11 @@
 package com.example.fireapp;
 
-public class Product{
+//класс продукта
+public class Product {
     private String name, desc, price;
 
     public Product() {
-        }
+    }
 
     public String getName() {
         return name;

@@ -1,11 +1,8 @@
 package com.example.fireapp;
 
-import android.database.CursorJoiner;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.common.api.Response;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,14 +11,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class DownloadingFBData implements RecyclerProductAdapter.EmailItemClicked, RecyclerBasketAdapter.EmailItemClicked {
+public class DownloadingFBData implements RecyclerProductAdapter.EmailItemClicked {
     private DatabaseReference reff;
     private RecyclerView ProductsRecycler;
     ArrayList<Product> myProducts = new ArrayList<>();
     private String randForBasket, child;
-private int iter;
+    private int iter;
 
     public DownloadingFBData(DatabaseReference reff, RecyclerView productsRecycler, String randForBasket, String child, int iter) {
         this.reff = reff;
@@ -32,8 +28,8 @@ private int iter;
     }
 
     public void setRecyclerView() {
-        reff = FirebaseDatabase.getInstance().getReference().child(child);
-        final ArrayList<Product> prlist = this.myProducts;
+        reff = FirebaseDatabase.getInstance().getReference().child(child);//работаем с классом в бд, которые мы получили из параметров
+        final ArrayList<Product> prlist = this.myProducts;//this - важный момент, мы используем глобальную переменную для её дальнейшего использования. Создаём промежуточную переменную
         reff.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
@@ -41,7 +37,7 @@ private int iter;
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Product product = ds.getValue(Product.class);
-                    prlist.add(product);
+                    prlist.add(product);//в цыкле в промеж.переменную кидаем продукты, которые авоматически переводяться в глобальную переменную в строке 32
                 }
                 setRecycler(myProducts);
             }
@@ -54,12 +50,13 @@ private int iter;
     }
 
     private void setRecycler(ArrayList<Product> pr) {
-        if(iter == 1) {
-            reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");
-            RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(pr, this, reff, randForBasket);
+        if (iter == 1) {
+            reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");//работаем с объектами в корзине в бд
+            RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(pr, this, reff, randForBasket, 1);
             ProductsRecycler.setAdapter(recyclerProductAdapter);
-        } else if(iter == 2){
-            RecyclerBasketAdapter recyclerProductAdapter = new RecyclerBasketAdapter(pr, this, reff);
+        } else if (iter == 2) {
+            reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");
+            RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(pr, this, reff, randForBasket, 2);
             ProductsRecycler.setAdapter(recyclerProductAdapter);
         }
     }
@@ -68,8 +65,5 @@ private int iter;
     public void itemClickedCallback(int itemPosition) {
 
     }
-//
-//    public ArrayList<Product> f(){
-//        return myProducts;
-//    }
+
 }

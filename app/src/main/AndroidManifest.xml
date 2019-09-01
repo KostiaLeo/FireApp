@@ -15,7 +15,6 @@
             android:name=".BasketActivity"
             android:label="@string/title_activity_basket"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".AddActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

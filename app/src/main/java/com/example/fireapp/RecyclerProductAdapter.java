@@ -5,39 +5,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProductAdapter.ViewHolder>  {
+public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProductAdapter.ViewHolder> {
     private List<Product> ProductList;
     private EmailItemClicked callback;
-    private ArrayList<Product> basket = new ArrayList<>();
     private DatabaseReference reff;
-    private int maxId;
+    private int maxId, iteratorforadapter;
     private String nameOfB;
 
 
     //---------------------------------------------------------------------------------------
 
-    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, String nameOfB) {
+    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, String nameOfB, int iteratorforadapter) {
         ProductList = productList;
         this.callback = callback;
         this.reff = reff;
         this.nameOfB = nameOfB;
+        this.iteratorforadapter = iteratorforadapter;
     }
 
     @NonNull
@@ -77,18 +71,47 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
         holder.titleTv.setText(product.getDesc());
         holder.textTv.setText(product.getPrice());
         holder.timeTv.setText("00:00");
+        if (iteratorforadapter == 1) {
+            holder.add.setText("+add");
+        } else if (iteratorforadapter == 2) {
+            holder.add.setText("-delete");
+        }
+
         holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addToBasket(product);
+                if (iteratorforadapter == 1) {
+                    addToBasket(product);
+                } else if (iteratorforadapter == 2) {
+                    removeAt(ProductList, position);
+                }//если задействовано главное меню, то задаём кнопке добавление при нажатии, если же корзина, то удаляем + редактируем надпись на кнопке
             }
         });
     }
 
     private void addToBasket(Product product) {
-//        basket.add(product);
-//        System.out.println(basket.size());
-        //reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");
+
+        reff.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if ((dataSnapshot.exists())) {
+                    maxId = (int) dataSnapshot.getChildrenCount();//цыкл создан для вычисления ID продукта для дальнейшей его идентификации и использования
+                } else {
+                    //Toast.makeText(AddActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        reff.child(String.valueOf(maxId++)).setValue(product);//по ID задаём продукт в корзину
+    }
+
+    private void removeAt(List<Product> productList, int position) {
+        productList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, productList.size()); //предыдущие 3 строки отвечают за удаление продукта именно с UI (из рес.вью) + анимацию удаления
         reff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -98,10 +121,12 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
                     //Toast.makeText(AddActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
-        reff.child(String.valueOf(maxId++)).setValue(product);
+        reff.child(String.valueOf(maxId++)).removeValue();//а теперь удаление из бд, то есть окончательное удаление из корзины
     }
 
     interface EmailItemClicked {
@@ -111,6 +136,7 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTv, titleTv, textTv, timeTv;
         Button add;
+
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.name);

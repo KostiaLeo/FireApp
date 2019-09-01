@@ -18,11 +18,13 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
-public class BasketActivity extends AppCompatActivity implements RecyclerProductAdapter.EmailItemClicked, RecyclerBasketAdapter.EmailItemClicked {
+public class BasketActivity extends AppCompatActivity implements RecyclerProductAdapter.EmailItemClicked {
     private Button goToMain;
     private DatabaseReference ref;
     private DownloadingFBData downloadingFBData;
     private RecyclerView basketProducts;
+
+    //аналогично mainАctivity, но работает не с полным списком, а с корзиной
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

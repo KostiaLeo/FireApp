@@ -1,80 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        tools:ignore="MissingConstraints">
-        <ImageView
-            android:id="@+id/ava"
-            android:layout_width="@dimen/ava_size"
-            android:layout_height="@dimen/ava_size"
-            android:layout_marginTop="@dimen/img_margtop"
-            android:layout_marginRight="@dimen/line_margtop"
-            android:scaleType="centerCrop"
-            />
-        <TextView
-            android:layout_toRightOf="@id/ava"
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="@dimen/nameSize"
-            android:text="Nick"
-            android:lines="1"
-            android:scrollHorizontally="true"
-            android:ellipsize="end"
-            />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    tools:ignore="MissingConstraints">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/name"
-            android:layout_toRightOf="@id/ava"
-            android:textSize="@dimen/titleSize"
-            android:textColor="@color/black"
-            android:text="Mail"
-            android:lines="1"
-            android:scrollHorizontally="true"
-            android:ellipsize="end"
-            />
+    <ImageView
+        android:id="@+id/ava"
+        android:layout_width="@dimen/ava_size"
+        android:layout_height="@dimen/ava_size"
+        android:layout_marginTop="@dimen/img_margtop"
+        android:layout_marginRight="@dimen/line_margtop"
+        android:scaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title"
-            android:layout_toRightOf="@id/ava"
-            android:textSize="@dimen/textSize"
-            android:lines="1"
-            android:scrollHorizontally="true"
-            android:ellipsize="end"
-            android:text="pwd"
-            />
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/textSize"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/time_margright"
-            android:text="Time"/>
-    <Button
+    <TextView
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+add"
+        android:layout_toRightOf="@id/ava"
+        android:ellipsize="end"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:text="Nick"
+        android:textColor="@color/black"
+        android:textSize="@dimen/nameSize" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:layout_toRightOf="@id/ava"
+        android:ellipsize="end"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:text="Mail"
+        android:textColor="@color/black"
+        android:textSize="@dimen/titleSize" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_toRightOf="@id/ava"
+        android:ellipsize="end"
+        android:lines="1"
+        android:scrollHorizontally="true"
+        android:text="pwd"
+        android:textSize="@dimen/textSize" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/time_margright"
+        android:text="Time"
+        android:textSize="@dimen/textSize" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/time"
         android:layout_alignParentRight="true"
-        android:id="@+id/add"/>
-        <View
-            android:id="@+id/line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            android:layout_below="@id/text"
-            android:layout_marginTop="@dimen/line_margtop"
-            />
-    </RelativeLayout>
+        android:text="+add" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/text"
+        android:layout_marginTop="@dimen/line_margtop"
+        android:background="@color/black" />
+</RelativeLayout>
