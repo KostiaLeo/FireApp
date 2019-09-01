@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         RecyclerView ProductsRecycler = findViewById(R.id.products);
 
         ProductsRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
