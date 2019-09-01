@@ -1,10 +1,10 @@
 package com.example.fireapp;
 
-public class Product {
+public class Product{
     private String name, desc, price;
 
     public Product() {
-    }
+        }
 
     public String getName() {
         return name;
@@ -30,4 +30,3 @@ public class Product {
         this.price = price;
     }
 }
-

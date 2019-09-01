@@ -10,7 +10,7 @@
     <dimen name="line_margtop">10dp</dimen>
     <dimen name="img_margtop">3dp</dimen>
     <dimen name="time_margright">8dp</dimen>
-<!--activity_detalized dimens-->
+    <!--activity_detalized dimens-->
     <dimen name="paddingName">15dp</dimen>
     <dimen name="paddingLeftName">8dp</dimen>
     <dimen name="txtSizeName_Title">20sp</dimen>

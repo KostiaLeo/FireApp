@@ -1,48 +1,41 @@
 package com.example.fireapp;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProductAdapter.ViewHolder>  {
+public class RecyclerBasketAdapter extends RecyclerView.Adapter<RecyclerBasketAdapter.ViewHolder>  {
     private List<Product> ProductList;
     private EmailItemClicked callback;
     private ArrayList<Product> basket = new ArrayList<>();
-    private DatabaseReference reff;
+    private DatabaseReference ref;
     private int maxId;
-    private String nameOfB;
-
-
     //---------------------------------------------------------------------------------------
 
-    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, String nameOfB) {
+    public RecyclerBasketAdapter(ArrayList<Product> productList, EmailItemClicked callback, DatabaseReference ref) {
         ProductList = productList;
         this.callback = callback;
-        this.reff = reff;
-        this.nameOfB = nameOfB;
+        this.ref = ref;
     }
 
     @NonNull
     @Override
-    public RecyclerProductAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerBasketAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
@@ -71,25 +64,27 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
 //------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void onBindViewHolder(RecyclerProductAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerBasketAdapter.ViewHolder holder, final int position) {
         final Product product = ProductList.get(position);
         holder.nameTv.setText(product.getName());
         holder.titleTv.setText(product.getDesc());
         holder.textTv.setText(product.getPrice());
         holder.timeTv.setText("00:00");
+        holder.add.setText("DELETE");
         holder.add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addToBasket(product);
+
+                removeAt(ProductList, position, product);
             }
         });
     }
 
-    private void addToBasket(Product product) {
-//        basket.add(product);
-//        System.out.println(basket.size());
-        //reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");
-        reff.addValueEventListener(new ValueEventListener() {
+    private void removeAt(List<Product> productList, int position, Product production) {
+        productList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, productList.size());
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.exists())) {
@@ -101,7 +96,7 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        reff.child(String.valueOf(maxId++)).setValue(product);
+        ref.child(String.valueOf(maxId++)).removeValue();
     }
 
     interface EmailItemClicked {

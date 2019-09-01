@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,53 +22,40 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements RecyclerProductAdapter.EmailItemClicked{
+public class MainActivity extends AppCompatActivity{
     private DatabaseReference reff;
-    private Button addToBucket, toConsole;
-    private ArrayList<Product> myProducts = new ArrayList<>();
-    private ArrayList<Product> bucket = new ArrayList<>();
+    private Button toBasket;
+    RecyclerProductAdapter recyclerProductAdapter;
+
+    private DownloadingFBData downloadingFBData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler);
-        //Intent intent = new Intent(MainActivity.this, AddActivity.class);
-        //startActivity(intent);
+
         FirebaseApp.initializeApp(this);
-        addToBucket = findViewById(R.id.add);
 
-        reff = FirebaseDatabase.getInstance().getReference().child("Product");
-        reff.addListenerForSingleValueEvent(new ValueEventListener() {
+        Random r = new Random();
+
+        final String nameOfBasket = "BasketProd";
+
+        toBasket = findViewById(R.id.toBasket);
+        toBasket.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Product product = ds.getValue(Product.class);
-                    myProducts.add(product);
-                }
-                give(myProducts);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, BasketActivity.class);
+                //intent.putExtra("nameOfB", nameOfBasket);
+                startActivity(intent);
             }
         });
-        //System.out.println("THIS IS BUCKETSSSSSSSSSSSSSSSSSSSS" + addToBucket);
-    }
-
-    private void addProductToBucket() {
-
-    }
-
-    public void itemClickedCallback(int itemPosition) {
-
-    }
-
-    private void give(List<Product> myProducts) {
         RecyclerView ProductsRecycler = findViewById(R.id.products);
+
         ProductsRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(myProducts, this);
-        ProductsRecycler.setAdapter(recyclerProductAdapter);
+        downloadingFBData = new DownloadingFBData(reff, ProductsRecycler, nameOfBasket, "Product", 1);
+
+        downloadingFBData.setRecyclerView();
     }
 }
