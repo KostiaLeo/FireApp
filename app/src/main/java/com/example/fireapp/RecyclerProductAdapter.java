@@ -24,14 +24,17 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     private String nameOfB;
 
 
-    //---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
 
     public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, String nameOfB, int iteratorforadapter) {
-        ProductList = productList;
+        this.ProductList = productList;
         this.callback = callback;
         this.reff = reff;
         this.nameOfB = nameOfB;
         this.iteratorforadapter = iteratorforadapter;
+    }
+
+    public RecyclerProductAdapter() {
     }
 
     @NonNull
@@ -65,11 +68,11 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
 //------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void onBindViewHolder(RecyclerProductAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         final Product product = ProductList.get(position);
         holder.nameTv.setText(product.getName());
         holder.titleTv.setText(product.getDesc());
-        holder.textTv.setText(product.getPrice());
+        holder.textTv.setText(String.valueOf(product.getPrice()));
         holder.timeTv.setText("00:00");
         if (iteratorforadapter == 1) {
             holder.add.setText("+add");
@@ -144,6 +147,19 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
             textTv = itemView.findViewById(R.id.text);
             timeTv = itemView.findViewById(R.id.time);
             add = itemView.findViewById(R.id.add);
+        }
+    }
+
+    public void clear() {
+        int size = ProductList.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                ProductList.remove(0);
+                //notifyItemRemoved(0);
+            }
+            System.out.println(ProductList.size());
+            notifyItemRangeRemoved(0, size);
+
         }
     }
 }
