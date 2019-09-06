@@ -21,20 +21,15 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     private EmailItemClicked callback;
     private DatabaseReference reff;
     private int maxId, iteratorforadapter;
-    private String nameOfB;
 
 
-//---------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------
 
-    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, String nameOfB, int iteratorforadapter) {
+    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, int iteratorforadapter) {
         this.ProductList = productList;
         this.callback = callback;
         this.reff = reff;
-        this.nameOfB = nameOfB;
         this.iteratorforadapter = iteratorforadapter;
-    }
-
-    public RecyclerProductAdapter() {
     }
 
     @NonNull
@@ -99,8 +94,6 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.exists())) {
                     maxId = (int) dataSnapshot.getChildrenCount();//цыкл создан для вычисления ID продукта для дальнейшей его идентификации и использования
-                } else {
-                    //Toast.makeText(AddActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -120,8 +113,6 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.exists())) {
                     maxId = (int) dataSnapshot.getChildrenCount();
-                } else {
-                    //Toast.makeText(AddActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -150,12 +141,12 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
         }
     }
 
+
     public void clear() {
         int size = ProductList.size();
         if (size > 0) {
             for (int i = 0; i < size; i++) {
                 ProductList.remove(0);
-                //notifyItemRemoved(0);
             }
             System.out.println(ProductList.size());
             notifyItemRangeRemoved(0, size);

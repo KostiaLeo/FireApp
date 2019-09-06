@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
 
-        recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, reff, nameOfBasket, 1);
+        recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, reff, 1);
 
         String[] filterBy = {"none filter", "name", "desc", "price"};
         spinner = findViewById(R.id.spinner);
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
 
     private void setAdapter(ArrayList<Product> mySortedProducts) {
         reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");//работаем с объектами в корзине в бд
-        RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, reff, nameOfBasket, 1);
+        RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, reff, 1);
         ProductsRecycler.setAdapter(recyclerProductAdapter);
     }
 

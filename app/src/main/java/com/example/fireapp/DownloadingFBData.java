@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class DownloadingFBData implements RecyclerProductAdapter.EmailItemClicked {
     private DatabaseReference reff;
     private RecyclerView ProductsRecycler;
-    ArrayList<Product> myProducts = new ArrayList<>();
+    private ArrayList<Product> myProducts = new ArrayList<>();
     private String randForBasket, child;
     private int iter;
 
@@ -51,12 +51,12 @@ public class DownloadingFBData implements RecyclerProductAdapter.EmailItemClicke
 
     private void setRecycler(ArrayList<Product> pr) {
         if (iter == 1) {
-            reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");//работаем с объектами в корзине в бд
-            RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(pr, this, reff, randForBasket, 1);
+            reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child(randForBasket);//работаем с объектами в корзине в бд
+            RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(pr, this, reff, 1);
             ProductsRecycler.setAdapter(recyclerProductAdapter);
         } else if (iter == 2) {
-            reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");
-            RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(pr, this, reff, randForBasket, 2);
+            reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child(randForBasket);
+            RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(pr, this, reff, 2);
             ProductsRecycler.setAdapter(recyclerProductAdapter);
         }
     }
