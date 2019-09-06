@@ -142,6 +142,7 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
 
 
     public void clear() {
-        reff.removeValue();
+        DatabaseReference refff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");
+        refff.removeValue();
     }
 }

@@ -111,17 +111,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
         }else {
             max = Integer.parseInt(maxV.getText().toString());
         }
-        System.out.println(maxV.getText().toString().length());
-        System.out.println(max);
 
         if(minV.getText().toString().length() == 0){
             min = 0;
         }else {
             min = Integer.parseInt(minV.getText().toString());
         }
-        //sorter.setMinValue(min);
-        System.out.println(maxV.getText().toString().length());
-        System.out.println(max);
 
         sorter.setSortByIt(sortByIt);
 
