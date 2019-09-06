@@ -9,11 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.ref.Reference;
 import java.util.List;
 
 public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProductAdapter.ViewHolder> {
@@ -21,23 +24,22 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     private EmailItemClicked callback;
     private DatabaseReference reff;
     private int maxId, iteratorforadapter;
-    private String nameOfB;
 
 
     //---------------------------------------------------------------------------------------
+//------------Стрёмная херь, которая чё-то там, куда-то там адаптирует ----------------------
+//----лаадно, это класс, отвечающий за работу над елементами ресайклера ---------------------
 
-    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, String nameOfB, int iteratorforadapter) {
-        ProductList = productList;
+    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, int iteratorforadapter) {
+        this.ProductList = productList;
         this.callback = callback;
         this.reff = reff;
-        this.nameOfB = nameOfB;
         this.iteratorforadapter = iteratorforadapter;
     }
 
     @NonNull
     @Override
     public RecyclerProductAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
@@ -62,14 +64,13 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
         return ProductList.size();
     }
 
-//------------------------------------------------------------------------------------------------------------
-
+//----------метод для заполнения каждого елемента списка -----------------------------------------------------
     @Override
-    public void onBindViewHolder(RecyclerProductAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         final Product product = ProductList.get(position);
         holder.nameTv.setText(product.getName());
         holder.titleTv.setText(product.getDesc());
-        holder.textTv.setText(product.getPrice());
+        holder.textTv.setText(String.valueOf(product.getPrice()));
         holder.timeTv.setText("00:00");
         if (iteratorforadapter == 1) {
             holder.add.setText("+add");
@@ -90,20 +91,15 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     }
 
     private void addToBasket(Product product) {
-
         reff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.exists())) {
                     maxId = (int) dataSnapshot.getChildrenCount();//цыкл создан для вычисления ID продукта для дальнейшей его идентификации и использования
-                } else {
-                    //Toast.makeText(AddActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         reff.child(String.valueOf(maxId++)).setValue(product);//по ID задаём продукт в корзину
     }
@@ -117,14 +113,10 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.exists())) {
                     maxId = (int) dataSnapshot.getChildrenCount();
-                } else {
-                    //Toast.makeText(AddActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         reff.child(String.valueOf(maxId++)).removeValue();//а теперь удаление из бд, то есть окончательное удаление из корзины
     }
@@ -133,6 +125,7 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
         void itemClickedCallback(int itemPosition);
     }
 
+//--------- метод, соединяющий UI c елементами ресайклера --------------------
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTv, titleTv, textTv, timeTv;
         Button add;
@@ -145,5 +138,10 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
             timeTv = itemView.findViewById(R.id.time);
             add = itemView.findViewById(R.id.add);
         }
+    }
+
+
+    public void clear() {
+        reff.removeValue();
     }
 }

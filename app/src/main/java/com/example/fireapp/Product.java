@@ -2,7 +2,8 @@ package com.example.fireapp;
 
 //класс продукта
 public class Product {
-    private String name, desc, price;
+    private String name, desc;
+    private int price;
 
     public Product() {
     }
@@ -23,11 +24,11 @@ public class Product {
         this.desc = desc;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 }
