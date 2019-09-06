@@ -9,11 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.ref.Reference;
 import java.util.List;
 
 public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProductAdapter.ViewHolder> {
@@ -24,6 +27,8 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
 
 
     //---------------------------------------------------------------------------------------
+//------------Стрёмная херь, которая чё-то там, куда-то там адаптирует ----------------------
+//----лаадно, это класс, отвечающий за работу над елементами ресайклера ---------------------
 
     public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, int iteratorforadapter) {
         this.ProductList = productList;
@@ -35,7 +40,6 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     @NonNull
     @Override
     public RecyclerProductAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
@@ -60,8 +64,7 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
         return ProductList.size();
     }
 
-//------------------------------------------------------------------------------------------------------------
-
+//----------метод для заполнения каждого елемента списка -----------------------------------------------------
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Product product = ProductList.get(position);
@@ -88,7 +91,6 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     }
 
     private void addToBasket(Product product) {
-
         reff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -96,10 +98,8 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
                     maxId = (int) dataSnapshot.getChildrenCount();//цыкл создан для вычисления ID продукта для дальнейшей его идентификации и использования
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         reff.child(String.valueOf(maxId++)).setValue(product);//по ID задаём продукт в корзину
     }
@@ -115,10 +115,8 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
                     maxId = (int) dataSnapshot.getChildrenCount();
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
         reff.child(String.valueOf(maxId++)).removeValue();//а теперь удаление из бд, то есть окончательное удаление из корзины
     }
@@ -127,6 +125,7 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
         void itemClickedCallback(int itemPosition);
     }
 
+//--------- метод, соединяющий UI c елементами ресайклера --------------------
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTv, titleTv, textTv, timeTv;
         Button add;
@@ -143,14 +142,6 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
 
 
     public void clear() {
-        int size = ProductList.size();
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                ProductList.remove(0);
-            }
-            System.out.println(ProductList.size());
-            notifyItemRangeRemoved(0, size);
-
-        }
+        reff.removeValue();
     }
 }

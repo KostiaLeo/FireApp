@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -29,12 +31,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
     private Button toBasket, goFByValue;
     private DownloadingFBData downloadingFBData;
     private ArrayList<Product> mySortedProducts = new ArrayList<>();
-    private String nameOfBasket = "BasketProd";
+    private String nameOfBasket = "BasketProd", sortByIt = "none filters";
     private RecyclerView ProductsRecycler;
     private Spinner spinner;
     private RecyclerProductAdapter recyclerProductAdapter;
     private EditText maxV, minV;
-    int max, min;
+    private int max, min;
+    private Sorter sorter;
+    private CheckBox desc_asc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +50,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
         maxV = findViewById(R.id.maxV);
         minV = findViewById(R.id.minV);
 
+//----------- типа онКликЛистенеры и прочяя штука с нажималками --------------------------
+        desc_asc = findViewById(R.id.desc_asc);
+        desc_asc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                giveValueForSorting();
+            }
+        });
+
         goFByValue = findViewById(R.id.giveByValue);
         goFByValue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                max = Integer.parseInt(maxV.getText().toString());
-                min = Integer.parseInt(minV.getText().toString());
-                sorting("none filter", 0, min, max);
+                giveValueForSorting();
             }
         });
         toBasket = findViewById(R.id.toBasket);
@@ -63,22 +74,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
                 startActivity(intent);
             }
         });
-        ProductsRecycler = findViewById(R.id.products);
 
+//-------------- ну всё, приехали, начинаются адаптеры, ресайклеры и прочие страшные вещи -----------------
+        ProductsRecycler = findViewById(R.id.products);
         ProductsRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         downloadingFBData = new DownloadingFBData(reff, ProductsRecycler, nameOfBasket, "Product", 1);
         downloadingFBData.setRecyclerView();
         //инициализируем объект, работающий с загрузкой данных из бд, и вызываем генерацию рес.вью + лайаут менеджер для ресайклера
 
-
-//--------------------------------------------------------------------------------------------------------------------------------------------
-
-//------------------------------------------------------ EXPERIMENTAL PART -------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------------------------------------------
-
         recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, reff, 1);
 
+//--------------- ъуъ, типа спинер, типа фильтрация пошла,определяем дропдаун штуку для выора фильтра -----
         String[] filterBy = {"none filter", "name", "desc", "price"};
         spinner = findViewById(R.id.spinner);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, filterBy);
@@ -86,131 +92,54 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String filterator = String.valueOf(spinner.getSelectedItem());
-                System.out.println("FILTERATOR -> " + filterator);
-                //sorting("price", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
-                //RecyclerProductAdapter adapterForDelete = new RecyclerProductAdapter();
-                if (filterator.equals("none filter")) {
-                    //System.out.println();
-                    // recreate();
-                } else {
-                    recyclerProductAdapter.clear();
-                    sorting(filterator, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
-                }
-                //sorting(filterator, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                sortByIt = String.valueOf(spinner.getSelectedItem());
+                    giveValueForSorting();
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
-        //sorting("price", 1, 90, 30);
-//        reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("Product");
-//        reff.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if ((dataSnapshot.exists())) {
-//                    maxId = (int) dataSnapshot.getChildrenCount();//цыкл создан для вычисления ID продукта для дальнейшей его идентификации и использования
-//                    //System.out.println(dataSnapshot.getChildrenCount());
-//                } else {
-//                    //Toast.makeText(AddActivity.this, "ERROR", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        });
-//        for (int i = 8; i < 15; i++) {
-//            Product product = new Product();
-//            product.setName("burger" + i);
-//            product.setDesc("desc" + i);
-//            product.setPrice((int) (30 + Math.round(Math.random())));
-//            reff.child(String.valueOf(i++)).setValue(product);
-//        }
-//        //reff.child(String.valueOf(maxId++)).setValue(product);
-//
-//
-////        System.out.println("LOOK AT HERE->>>>>>> ");
-//        Query q = reff.orderByChild("name");
-//        final ArrayList<String> names = new ArrayList<>();
-//        final ArrayList<String> prices = new ArrayList<>();
-//        q.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot data : dataSnapshot.getChildren()) {
-//                    String name = data.child("name").getValue().toString();
-//                    String price = data.child("price").getValue().toString();
-//                    names.add(name);
-//                    prices.add(price);
-//                }
-//                //Collections.reverse(prices);
-//                //Collections.reverse(names);
-//                for (int i = 0; i < prices.size(); i++) {
-//                    System.out.println(prices.get(i) + " <-> " + names.get(i));
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//        ref1 = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("Product").child("burger");
-//        ref1.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                System.out.println("dataSnapshot.getValue() = " + dataSnapshot.getValue());
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-    }
-
-    private void sorting(String sortByIt, final int iteratorForDescAsc, final int minValue, final int maxValue) {
-        reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("Product");
-
-        Query q = reff.orderByChild(sortByIt);
-        final ArrayList<Product> prlist = this.mySortedProducts;
-
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Product product = ds.getValue(Product.class);
-                    if (product.getPrice() <= maxValue && product.getPrice() >= minValue) {
-                        prlist.add(product);
-                    }
-                }
-
-                if (iteratorForDescAsc == 1) {
-                    Collections.reverse(mySortedProducts);
-                } else {
-                    System.out.println();
-                }
-                //ProductsRecycler.draw();
-                setAdapter(mySortedProducts);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private void setAdapter(ArrayList<Product> mySortedProducts) {
-        reff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");//работаем с объектами в корзине в бд
-        RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, reff, 1);
-        ProductsRecycler.setAdapter(recyclerProductAdapter);
     }
 
     @Override
     public void itemClickedCallback(int itemPosition) {
+    }
+//--------------- метод, анализирующий данные для фильтрации из UI и передающий их в класс-сортировщик
+    private void giveValueForSorting(){
+        sorter = new Sorter(ProductsRecycler, sortByIt);
+        if(maxV.getText().toString().length() == 0){
+            max = Integer.MAX_VALUE;
+        }else {
+            max = Integer.parseInt(maxV.getText().toString());
+        }
+        System.out.println(maxV.getText().toString().length());
+        System.out.println(max);
+
+        if(minV.getText().toString().length() == 0){
+            min = 0;
+        }else {
+            min = Integer.parseInt(minV.getText().toString());
+        }
+        //sorter.setMinValue(min);
+        System.out.println(maxV.getText().toString().length());
+        System.out.println(max);
+
+        sorter.setSortByIt(sortByIt);
+
+        if(desc_asc.isChecked()) {
+            sorter.setIteratorForDescAsc(1);
+        }else {
+            sorter.setIteratorForDescAsc(0);
+        }
+
+        sorter.setMaxValue(max);
+        sorter.setMinValue(min);
+
+        sorter.sortProds();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        recyclerProductAdapter.clear();
     }
 }
