@@ -1,6 +1,5 @@
 package com.example.fireapp;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.FirebaseApp;
@@ -24,9 +23,12 @@ public class Sorter implements RecyclerProductAdapter.EmailItemClicked {
     private RecyclerView productsRecycler;
     private Query q;
 
-    public Sorter(RecyclerView productsRecycler, String sortByIt) {
+    public Sorter(RecyclerView productsRecycler, String sortByIt, int iteratorForDescAsc, int minValue, int maxValue) {
         this.productsRecycler = productsRecycler;
         this.sortByIt = sortByIt;
+        this.iteratorForDescAsc = iteratorForDescAsc;
+        this.maxValue = maxValue;
+        this.minValue = minValue;
     }
 
 // пожалуй метод, ради которого создавался класс ----------------------------------------------

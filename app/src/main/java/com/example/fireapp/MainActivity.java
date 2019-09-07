@@ -3,7 +3,6 @@ package com.example.fireapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,17 +13,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements RecyclerProductAdapter.EmailItemClicked {
     private DatabaseReference reff;
@@ -36,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
     private Spinner spinner;
     private RecyclerProductAdapter recyclerProductAdapter;
     private EditText maxV, minV;
-    private int max, min;
+    private int max, min, iter;
     private Sorter sorter;
     private CheckBox desc_asc;
 
@@ -103,9 +94,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
     @Override
     public void itemClickedCallback(int itemPosition) {
     }
+
 //--------------- метод, анализирующий данные для фильтрации из UI и передающий их в класс-сортировщик
     private void giveValueForSorting(){
-        sorter = new Sorter(ProductsRecycler, sortByIt);
+
         if(maxV.getText().toString().length() == 0){
             max = Integer.MAX_VALUE;
         }else {
@@ -118,17 +110,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
             min = Integer.parseInt(minV.getText().toString());
         }
 
-        sorter.setSortByIt(sortByIt);
-
         if(desc_asc.isChecked()) {
-            sorter.setIteratorForDescAsc(1);
+            iter = 1;
         }else {
-            sorter.setIteratorForDescAsc(0);
+            iter = 0;
         }
-
-        sorter.setMaxValue(max);
-        sorter.setMinValue(min);
-
+        sorter = new Sorter(ProductsRecycler, sortByIt, iter, min, max);
         sorter.sortProds();
     }
 

@@ -3,20 +3,16 @@ package com.example.fireapp;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
 
 public class BasketActivity extends AppCompatActivity implements RecyclerProductAdapter.EmailItemClicked {
     private Button goToMain;
