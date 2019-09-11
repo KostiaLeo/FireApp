@@ -16,7 +16,7 @@ import java.util.Collections;
 //------- здрасте, добро пожаловать в класс-сортировщик ------------------
 
 public class Sorter implements RecyclerProductAdapter.EmailItemClicked {
-    private DatabaseReference reference;
+   // private DatabaseReference reference;
     private String sortByIt, nameOfBasket = "BasketProd";
     private int iteratorForDescAsc, minValue, maxValue;
     private ArrayList<Product> mySortedProducts = new ArrayList<>();
@@ -36,54 +36,54 @@ public class Sorter implements RecyclerProductAdapter.EmailItemClicked {
 // при необходимости их сразу сортирует по показателю, выбранному юзером ----------------------
 
     public void sortProds() {
-        reference = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("Product");
-        final ArrayList<Product> prlist = this.mySortedProducts;
-
-        if (!(sortByIt.equals("none filters"))) {
-            this.q = reference.orderByChild(sortByIt);
-        } else {
-            this.q = reference;
-        }
+//        reference = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("Product");
+//        final ArrayList<Product> prlist = this.mySortedProducts;
+//
+//        if (!(sortByIt.equals("none filters"))) {
+//            this.q = reference.orderByChild(sortByIt);
+//        } else {
+//            this.q = reference;
+//        }
 //------------ перебираем все елементы и, если они удовлетворяют условиям фильтра, закидываем в список -----------
-        q.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Product product = ds.getValue(Product.class);
-                    if (product.getPrice() <= maxValue && product.getPrice() >= minValue) {
-                        prlist.add(product);
-                    }
-                }
-
-                if (iteratorForDescAsc == 1) {
-                    Collections.reverse(mySortedProducts);
-                } else if (iteratorForDescAsc == 0) {
-                    System.out.println();
-                }
-                setAdapter(mySortedProducts);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+//        q.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//                    Product product = ds.getValue(Product.class);
+//                    if (product.getPrice() <= maxValue && product.getPrice() >= minValue) {
+//                        prlist.add(product);
+//                    }
+//                }
+//
+//                if (iteratorForDescAsc == 1) {
+//                    Collections.reverse(mySortedProducts);
+//                } else if (iteratorForDescAsc == 0) {
+//                    System.out.println();
+//                }
+//                setAdapter(mySortedProducts);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
     }
 
 //------------- закидываем отсортированные данные в адаптер -> ресайклер ----------------------
     private void setAdapter(ArrayList<Product> mySortedProducts) {
-        reference = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child(nameOfBasket);//работаем с объектами в корзине в бд
-        RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, reference, 1);
+        //reference = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child(nameOfBasket);//работаем с объектами в корзине в бд
+        RecyclerProductAdapter recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, 1);//, reference
         productsRecycler.setAdapter(recyclerProductAdapter);
     }
 
-    public DatabaseReference getReference() {
-        return reference;
-    }
-
-    public void setReference(DatabaseReference reference) {
-        this.reference = reference;
-    }
+//    public DatabaseReference getReference() {
+//        return reference;
+//    }
+//
+//    public void setReference(DatabaseReference reference) {
+//        this.reference = reference;
+//    }
 
     public String getSortByIt() {
         return sortByIt;

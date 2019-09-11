@@ -21,7 +21,7 @@ import java.util.List;
 public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProductAdapter.ViewHolder> {
     private List<Product> ProductList;
     private EmailItemClicked callback;
-    private DatabaseReference reff;
+   // private DatabaseReference reff;
     private int maxId, iteratorforadapter;
 
 
@@ -29,10 +29,10 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
 //------------Стрёмная херь, которая чё-то там, куда-то там адаптирует ----------------------
 //----лаадно, это класс, отвечающий за работу над елементами ресайклера ---------------------
 
-    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, DatabaseReference reff, int iteratorforadapter) {
+    public RecyclerProductAdapter(List<Product> productList, EmailItemClicked callback, int iteratorforadapter) {//, DatabaseReference reff
         this.ProductList = productList;
         this.callback = callback;
-        this.reff = reff;
+     //   this.reff = reff;
         this.iteratorforadapter = iteratorforadapter;
     }
 
@@ -90,34 +90,34 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     }
 
     private void addToBasket(Product product) {
-        reff.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.exists())) {
-                    maxId = (int) dataSnapshot.getChildrenCount();//цыкл создан для вычисления ID продукта для дальнейшей его идентификации и использования
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });
-        reff.child(String.valueOf(maxId++)).setValue(product);//по ID задаём продукт в корзину
+//        reff.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if ((dataSnapshot.exists())) {
+//                    maxId = (int) dataSnapshot.getChildrenCount();//цыкл создан для вычисления ID продукта для дальнейшей его идентификации и использования
+//                }
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {}
+//        });
+//        reff.child(String.valueOf(maxId++)).setValue(product);//по ID задаём продукт в корзину
     }
 
     private void removeAt(List<Product> productList, int position) {
-        productList.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, productList.size()); //предыдущие 3 строки отвечают за удаление продукта именно с UI (из рес.вью) + анимацию удаления
-        reff.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if ((dataSnapshot.exists())) {
-                    maxId = (int) dataSnapshot.getChildrenCount();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {}
-        });
-        reff.child(String.valueOf(maxId++)).removeValue();//а теперь удаление из бд, то есть окончательное удаление из корзины
+//        productList.remove(position);
+//        notifyItemRemoved(position);
+//        notifyItemRangeChanged(position, productList.size()); //предыдущие 3 строки отвечают за удаление продукта именно с UI (из рес.вью) + анимацию удаления
+//        reff.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if ((dataSnapshot.exists())) {
+//                    maxId = (int) dataSnapshot.getChildrenCount();
+//                }
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {}
+//        });
+       // reff.child(String.valueOf(maxId++)).removeValue();//а теперь удаление из бд, то есть окончательное удаление из корзины
     }
 
     interface EmailItemClicked {
@@ -141,7 +141,7 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
 
 
     public void clear() {
-        DatabaseReference refff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");
-        refff.removeValue();
+     //   DatabaseReference refff = FirebaseDatabase.getInstance(FirebaseApp.getInstance()).getReference().child("BasketProd");
+     //   refff.removeValue();
     }
 }

@@ -2,10 +2,34 @@ package com.example.fireapp;
 
 //класс продукта
 public class Product {
-    private String name, desc;
+    private String name, desc, category, collection;
     private int price;
 
     public Product() {
+    }
+
+    public Product(String name, String desc, String category, String collection, int price) {
+        this.name = name;
+        this.desc = desc;
+        this.category = category;
+        this.collection = collection;
+        this.price = price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
     }
 
     public String getName() {

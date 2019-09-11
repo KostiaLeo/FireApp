@@ -18,7 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements RecyclerProductAdapter.EmailItemClicked {
-    private DatabaseReference reff;
+   // private DatabaseReference reff;
     private Button toBasket, goFByValue;
     private DownloadingFBData downloadingFBData;
     private ArrayList<Product> mySortedProducts = new ArrayList<>();
@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
 //-------------- ну всё, приехали, начинаются адаптеры, ресайклеры и прочие страшные вещи -----------------
         ProductsRecycler = findViewById(R.id.products);
         ProductsRecycler.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        downloadingFBData = new DownloadingFBData(reff, ProductsRecycler, nameOfBasket, "Product", 1);
+        downloadingFBData = new DownloadingFBData(ProductsRecycler, nameOfBasket, "Product", 1);//reff,
         downloadingFBData.setRecyclerView();
         //инициализируем объект, работающий с загрузкой данных из бд, и вызываем генерацию рес.вью + лайаут менеджер для ресайклера
 
-        recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, reff, 1);
+        recyclerProductAdapter = new RecyclerProductAdapter(mySortedProducts, this, 1);//, reff
 
 //--------------- ъуъ, типа спинер, типа фильтрация пошла,определяем дропдаун штуку для выора фильтра -----
         String[] filterBy = {"none filter", "name", "desc", "price"};
