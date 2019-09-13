@@ -37,7 +37,7 @@ public class BasketActivity extends AppCompatActivity implements RecyclerProduct
         });
         basketProducts.setLayoutManager(new LinearLayoutManager(BasketActivity.this));
 
-        downloadingFBData = new DownloadingFBData( basketProducts, "BasketProd", "BasketProd", 2);//ref,
+        downloadingFBData = new DownloadingFBData(basketProducts, "BasketProd", "BasketProd", 2);//ref,
         downloadingFBData.setRecyclerView();
     }
 

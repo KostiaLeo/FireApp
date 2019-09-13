@@ -7,14 +7,24 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
@@ -22,7 +32,8 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     private List<Product> ProductList;
     private EmailItemClicked callback;
    // private DatabaseReference reff;
-    private int maxId, iteratorforadapter;
+    private int maxId = 0, iteratorforadapter;
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
 
     //---------------------------------------------------------------------------------------
@@ -90,6 +101,24 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
     }
 
     private void addToBasket(Product product) {
+//        firestore.collection("Basket").document().addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                if (documentSnapshot.exists()) maxId = documentSnapshot.getData().size();
+//                System.out.println(documentSnapshot.getData().size());
+//            }
+//        });
+        CollectionReference reference = firestore.collection("Basket");
+        reference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                System.out.println(queryDocumentSnapshots.size());
+                maxId = queryDocumentSnapshots.size();
+            }
+        });
+
+        firestore.collection("Basket").document(String.valueOf(maxId++)).set(product);
+        }
 //        reff.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -101,12 +130,19 @@ public class RecyclerProductAdapter extends RecyclerView.Adapter<RecyclerProduct
 //            public void onCancelled(@NonNull DatabaseError databaseError) {}
 //        });
 //        reff.child(String.valueOf(maxId++)).setValue(product);//по ID задаём продукт в корзину
-    }
 
     private void removeAt(List<Product> productList, int position) {
-//        productList.remove(position);
-//        notifyItemRemoved(position);
-//        notifyItemRangeChanged(position, productList.size()); //предыдущие 3 строки отвечают за удаление продукта именно с UI (из рес.вью) + анимацию удаления
+        productList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, productList.size()); //предыдущие 3 строки отвечают за удаление продукта именно с UI (из рес.вью) + анимацию удаления
+        CollectionReference reference = firestore.collection("Basket");
+        reference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                maxId = queryDocumentSnapshots.size();
+            }
+        });
+        firestore.collection("Basket").document(String.valueOf(maxId++)).delete();
 //        reff.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

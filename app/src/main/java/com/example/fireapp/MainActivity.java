@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerProductAd
         }else {
             iter = 0;
         }
+
         sorter = new Sorter(ProductsRecycler, sortByIt, iter, min, max);
         sorter.sortProds();
     }

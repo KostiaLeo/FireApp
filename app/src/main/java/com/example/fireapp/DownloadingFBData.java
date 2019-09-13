@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,7 +30,7 @@ public class DownloadingFBData implements RecyclerProductAdapter.EmailItemClicke
     private ArrayList<Product> myProducts = new ArrayList<>(), prodsss = new ArrayList<>();
     private String randForBasket, child;
     private int iter;
-
+    private CollectionReference refff;
     public DownloadingFBData(RecyclerView productsRecycler, String randForBasket, String child, int iter) {//DatabaseReference reff,
         ProductsRecycler = productsRecycler;
         this.randForBasket = randForBasket;
@@ -39,7 +40,13 @@ public class DownloadingFBData implements RecyclerProductAdapter.EmailItemClicke
 
     public void setRecyclerView() {
         final ArrayList<Product> prods = this.prodsss;
-        firestore.collection("Products").document("Deserts").collection("Ice-creams").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        if(iter == 2) {
+            refff = firestore.collection("Basket");
+        }else if(iter == 1) {
+            refff = firestore.collection("Products").document("Deserts").collection("Ice-creams");
+        }
+        refff.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -58,6 +65,8 @@ public class DownloadingFBData implements RecyclerProductAdapter.EmailItemClicke
                 }
                 System.out.println("Hey nameeee -> " + prodsss.get(prodsss.size() - 1).getName());
                 setRecycler(prodsss);
+
+
             }
         });
 //        reff = FirebaseDatabase.getInstance().getReference().child(child);//работаем с классом в бд, которые мы получили из параметров
